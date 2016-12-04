@@ -5,6 +5,8 @@
  */
 package pairwisesequencealignment;
 
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author paks
@@ -244,8 +246,8 @@ public class UI extends javax.swing.JFrame {
 
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
         if (!this.proteinRadButton.isSelected() && !this.nucleotideRadButton.isSelected()) {
-            
-        }
+            JOptionPane.showMessageDialog(this, "Please choose which kind of sequence!", "Error", JOptionPane.ERROR_MESSAGE);
+        } 
     }//GEN-LAST:event_submitButtonActionPerformed
 
     private void nucleotideRadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nucleotideRadButtonActionPerformed
@@ -308,7 +310,8 @@ public class UI extends javax.swing.JFrame {
             }
         });
     }
-
+    
+    public PairwiseSequenceAligner psa;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField gapScore;
     private javax.swing.JLabel inputLabel;

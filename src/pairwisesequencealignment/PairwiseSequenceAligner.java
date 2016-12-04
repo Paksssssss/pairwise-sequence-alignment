@@ -18,10 +18,13 @@ public class PairwiseSequenceAligner {
     boolean isProtein;
     int matchScore, mismatchScore, gapScore;
     Sequence seq1, seq2;
-
-    public PairwiseSequenceAligner(boolean isGlobal, boolean isProtein) {
+    
+    public PairwiseSequenceAligner(boolean isGlobal) {
         this.global = isGlobal;
-        this.isProtein = isProtein;
+    }
+    
+    public void parseInput(){
+        
     }
 
     public boolean scoringSchemeChecker(ArrayList<String> scheme) {
