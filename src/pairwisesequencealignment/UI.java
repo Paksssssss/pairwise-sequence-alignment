@@ -45,7 +45,7 @@ public class UI extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        scoringMatrixCBox = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Pairwise Sequence Alignment");
@@ -58,6 +58,11 @@ public class UI extends javax.swing.JFrame {
         inputLabel.setText("Input");
 
         resetButton.setText("Reset");
+        resetButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                resetButtonActionPerformed(evt);
+            }
+        });
 
         uploadFileButton.setText("Upload File");
 
@@ -69,6 +74,7 @@ public class UI extends javax.swing.JFrame {
         });
 
         nucleotideRadButton.setFont(new java.awt.Font("Ubuntu", 0, 17)); // NOI18N
+        nucleotideRadButton.setSelected(true);
         nucleotideRadButton.setText("Nucleotide Sequence");
         nucleotideRadButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -121,7 +127,7 @@ public class UI extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Ubuntu", 1, 17)); // NOI18N
         jLabel5.setText("Scoring Matrix");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PAM120 (Global)", "BIOSUM62 (Local)" }));
+        scoringMatrixCBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PAM120 (Global)", "BIOSUM62 (Local)" }));
 
         javax.swing.GroupLayout inputOptionsPanelLayout = new javax.swing.GroupLayout(inputOptionsPanel);
         inputOptionsPanel.setLayout(inputOptionsPanelLayout);
@@ -151,7 +157,7 @@ public class UI extends javax.swing.JFrame {
                             .addGroup(inputOptionsPanelLayout.createSequentialGroup()
                                 .addComponent(matchScore, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(scoringMatrixCBox, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(inputOptionsPanelLayout.createSequentialGroup()
                         .addGap(31, 31, 31)
                         .addComponent(jLabel1)
@@ -175,7 +181,7 @@ public class UI extends javax.swing.JFrame {
                 .addGroup(inputOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(matchScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2)
-                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(scoringMatrixCBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(inputOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(gapScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -237,7 +243,9 @@ public class UI extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
-        // TODO add your handling code here:
+        if (!this.proteinRadButton.isSelected() && !this.nucleotideRadButton.isSelected()) {
+            
+        }
     }//GEN-LAST:event_submitButtonActionPerformed
 
     private void nucleotideRadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nucleotideRadButtonActionPerformed
@@ -255,6 +263,16 @@ public class UI extends javax.swing.JFrame {
     private void proteinRadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proteinRadButtonActionPerformed
         this.nucleotideRadButton.setSelected(false);
     }//GEN-LAST:event_proteinRadButtonActionPerformed
+
+    private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
+        this.userInput.setText("");
+        this.nucleotideRadButton.setSelected(false);
+        this.proteinRadButton.setSelected(true);
+        this.matchScore.setText("1");
+        this.mismatchScore.setText("0");
+        this.gapScore.setText("-1");
+        this.scoringMatrixCBox.setSelectedIndex(0);
+    }//GEN-LAST:event_resetButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -295,7 +313,6 @@ public class UI extends javax.swing.JFrame {
     private javax.swing.JTextField gapScore;
     private javax.swing.JLabel inputLabel;
     private javax.swing.JPanel inputOptionsPanel;
-    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -307,6 +324,7 @@ public class UI extends javax.swing.JFrame {
     private javax.swing.JRadioButton nucleotideRadButton;
     private javax.swing.JRadioButton proteinRadButton;
     private javax.swing.JButton resetButton;
+    private javax.swing.JComboBox<String> scoringMatrixCBox;
     private javax.swing.JButton submitButton;
     private javax.swing.JButton uploadFileButton;
     private javax.swing.JTextArea userInput;
