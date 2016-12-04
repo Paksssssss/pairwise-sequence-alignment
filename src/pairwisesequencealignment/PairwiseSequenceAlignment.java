@@ -15,7 +15,18 @@ public class PairwiseSequenceAlignment {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        PairwiseSequenceAligner psa = new PairwiseSequenceAligner(true,false);
+        psa.matchScore = 3;
+        psa.gapScore = -1;
+        psa.mismatchScore = 0;
+        
+        Sequence seq1 = new Sequence("seq1", "ACTGACTAGA", false);
+        Sequence seq2 = new Sequence("seq2", "ACTAAGATA", false);
+        psa.seq1 = seq1;
+        psa.seq2 = seq2;
+        psa.initializeMatrix();
+        psa.fillMatrix();
+        psa.printMatrix();
     }
     
 }
