@@ -5,6 +5,8 @@
  */
 package pairwisesequencealignment;
 
+import java.io.IOException;
+
 /**
  *
  * @author paks
@@ -14,19 +16,26 @@ public class PairwiseSequenceAlignment {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         PairwiseSequenceAligner psa = new PairwiseSequenceAligner(true);
-        psa.matchScore = 3;
-        psa.gapScore = -1;
-        psa.mismatchScore = 0;
+        psa.matchScore = 5;
+        psa.gapScore = -4;
+        psa.mismatchScore = -3;
         
-        Sequence seq1 = new Sequence("seq1", "ACTGACTAGA", false);
-        Sequence seq2 = new Sequence("seq2", "ACTAAGATA", false);
+        Sequence seq1 = new Sequence("seq1", "VLSPADKFLTNV", false);
+        Sequence seq2 = new Sequence("seq2", "VFTELSPAKTV", false);
         psa.seq1 = seq1;
         psa.seq2 = seq2;
+        psa.isProtein = true;
+        psa.global = false;
+        psa.setScoringMatrix(0);
         psa.initializeMatrix();
         psa.fillMatrix();
         psa.printMatrix();
+        psa.solve();
+        for (String s: psa.alignments) {
+            System.out.println(s);
+        }
     }
     
 }

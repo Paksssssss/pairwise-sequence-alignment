@@ -5,7 +5,9 @@
  */
 package pairwisesequencealignment;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 
 /**
  *
@@ -16,15 +18,27 @@ public class PairwiseSequenceAligner {
     Cell matrix[][];
     boolean global;
     boolean isProtein;
+    boolean isBlosum62, isPam120;
     int matchScore, mismatchScore, gapScore;
     Sequence seq1, seq2;
-    
+    ArrayList<String> alignments = new ArrayList();
+    ScoringMatrix scoringMatrix;
+
     public PairwiseSequenceAligner(boolean isGlobal) {
         this.global = isGlobal;
     }
-    
-    public void parseInput(){
-        
+
+    public void parseInput() {
+
+    }
+
+    public void setScoringMatrix(int i) throws IOException {
+        if (i == 0) {
+            scoringMatrix = new ScoringMatrix("./pam120.txt");
+        } else {
+            scoringMatrix = new ScoringMatrix("./blosum62");
+        }
+        gapScore = scoringMatrix.getScore('*', 'A');
     }
 
     public boolean scoringSchemeChecker(ArrayList<String> scheme) {
@@ -38,44 +52,99 @@ public class PairwiseSequenceAligner {
 
     public void fillMatrix() {
         int top, left, diag;
+        boolean mismatch;
+        System.out.println(seq2.sequence.length());
+        System.out.println(seq1.sequence.length());
+        int score = 0;
         for (int j = 1; j < seq2.sequence.length(); j++) {
             for (int i = 1; i < seq1.sequence.length(); i++) {
-                if (seq1.sequence.charAt(i) == seq2.sequence.charAt(j)) {
-                    diag = matchScore + matrix[i - 1][j - 1].value;
+                mismatch = false;
+                if (isProtein) {
+                    if (seq1.sequence.charAt(i) == seq2.sequence.charAt(j)) {
+                        diag = scoringMatrix.getScore(seq1.sequence.charAt(i), seq2.sequence.charAt(j)) + matrix[i - 1][j - 1].value;
+                    } else {
+                        diag = scoringMatrix.getScore(seq1.sequence.charAt(i), seq2.sequence.charAt(j)) + matrix[i - 1][j - 1].value;
+                        mismatch = true;
+                    }
+                    left = gapScore + matrix[i - 1][j].value;
+                    top = gapScore + matrix[i][j - 1].value;
                 } else {
-                    diag = mismatchScore + matrix[i - 1][j - 1].value;
+                    if (seq1.sequence.charAt(i) == seq2.sequence.charAt(j)) {
+                        diag = matchScore + matrix[i - 1][j - 1].value;
+                    } else {
+                        diag = mismatchScore + matrix[i - 1][j - 1].value;
+                        mismatch = true;
+                    }
+                    left = gapScore + matrix[i - 1][j].value;
+                    top = gapScore + matrix[i][j - 1].value;
                 }
-                left = gapScore + matrix[i - 1][j].value;
-                top = gapScore + matrix[i][j - 1].value;
                 int choice = getMax(diag, top, left);
+                //System.out.print(choice+" ");
                 if (!global && diag < 0 && top < 0 && left < 0) {
-                    matrix[i][j] = new Cell(0, false, false, false);
+                    matrix[i][j] = new Cell(0, false, false, false, mismatch);
                 } else {
-                    switch (choice) {
-                        case 0:
-                            matrix[i][j] = new Cell(diag, false, false, true);
-                            break;
-                        case 1:
-                            matrix[i][j] = new Cell(top, false, true, false);
-                            break;
-                        case 2:
-                            matrix[i][j] = new Cell(left, true, false, false);
-                            break;
-                        default:
-                            break;
+                    matrix[i][j] = new Cell(choice, mismatch);
+                    matrix[i][j].diag = choice == diag;
+                    matrix[i][j].up = choice == top;
+                    matrix[i][j].left = choice == left;
+                }
+            }
+            System.out.println("");
+        }
+        System.out.println(score);
+    }
+    
+    public void solve(){
+        if (global) {
+            traceback("",seq1.sequence.length()-1,seq2.sequence.length()-1);
+        } else {
+            int max, i = 1, j = 1;
+            max = matrix[0][0].value;
+            boolean found = false;
+            for (; j < seq2.sequence.length(); j++) {
+                for (; i < seq1.sequence.length(); i++) {
+                    System.out.println(max);
+                    if (matrix[i][j].value > max) {
+                        max = matrix[i][j].value;
                     }
                 }
             }
+            traceback("",i,j);
         }
+        alignments = new ArrayList<String>(new LinkedHashSet<String>(alignments));
+    }
+
+    public String traceback(String alignment, int i, int j) {
+        if (i == 0 && j == 0) {
+            alignments.add(alignment);
+        }
+        if (matrix[i][j].diag) {
+            if (matrix[i][j].mismatch) {
+                alignment = "*" + alignment;
+            } else {
+                alignment = "|" + alignment;
+            }
+            traceback(alignment, --i, --j);
+        }
+        if (matrix[i][j].left) {
+            alignment = "-" + alignment;
+            traceback(alignment, --i, j);
+        }
+        if (matrix[i][j].up) {
+            alignment = "^" + alignment;
+            traceback(alignment, i, --j);
+        }
+        return null;
     }
 
     private int getMax(int diag, int top, int left) {
+        System.out.println(diag + " " + top + " " + left);
         if (diag >= top && diag >= left) {
-            return 0;
+            return diag;
         } else if (top >= diag && top >= left) {
-            return 1;
+            return top;
         } else {
-            return 2;
+            return left;
         }
     }
 
@@ -85,10 +154,10 @@ public class PairwiseSequenceAligner {
         matrix = new Cell[seq1.sequence.length()][seq2.sequence.length()];
         System.out.println(matrix[0][0]);
         if (global) {// im setting initial values of global matrix
-            for (int i = 0, j = 0; i < seq1.sequence.length(); i++, j += -4) {
+            for (int i = 0, j = 0; i < seq1.sequence.length(); i++, j += gapScore) {
                 matrix[i][0] = new Cell(j);
             }
-            for (int i = 0, j = 0; i < seq2.sequence.length(); i++, j += -4) {
+            for (int i = 0, j = 0; i < seq2.sequence.length(); i++, j += gapScore) {
                 matrix[0][i] = new Cell(j);
             }
         } else {
@@ -102,8 +171,8 @@ public class PairwiseSequenceAligner {
     }
 
     public void printMatrix() {
-        for (int i = 0; i < seq1.sequence.length(); i++) {
-            for (int j = 0; j < seq2.sequence.length(); j++) {
+        for (int j = 0; j < seq2.sequence.length(); j++) {
+            for (int i = 0; i < seq1.sequence.length(); i++) {
                 System.out.print(matrix[i][j].value + " ");
             }
             System.out.println("");
@@ -135,6 +204,7 @@ class Cell {
     boolean left;
     boolean up;
     boolean diag;
+    boolean mismatch;
 
     public Cell() {
         int value = 0;
@@ -143,11 +213,17 @@ class Cell {
     public Cell(int value) {
         this.value = value;
     }
-
-    public Cell(int value, boolean left, boolean up, boolean diag) {
+    
+    public Cell(int value, boolean mismatch){
+        this.value = value;
+        this.mismatch = mismatch;
+    }
+    
+    public Cell(int value, boolean left, boolean up, boolean diag, boolean mismatch) {
         this.value = value;
         this.left = left;
         this.up = up;
         this.diag = diag;
+        this.mismatch = mismatch;
     }
 }

@@ -37,8 +37,7 @@ public class UI extends javax.swing.JFrame {
         uploadFileButton = new javax.swing.JButton();
         submitButton = new javax.swing.JButton();
         inputOptionsPanel = new javax.swing.JPanel();
-        nucleotideRadButton = new javax.swing.JRadioButton();
-        proteinRadButton = new javax.swing.JRadioButton();
+        nuclPanel = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         matchScore = new javax.swing.JTextField();
         mismatchScore = new javax.swing.JTextField();
@@ -46,8 +45,11 @@ public class UI extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
+        proteinPanel = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         scoringMatrixCBox = new javax.swing.JComboBox<>();
+        proteinRadButton = new javax.swing.JRadioButton();
+        nucleotideRadButton = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Pairwise Sequence Alignment");
@@ -75,23 +77,6 @@ public class UI extends javax.swing.JFrame {
             }
         });
 
-        nucleotideRadButton.setFont(new java.awt.Font("Ubuntu", 0, 17)); // NOI18N
-        nucleotideRadButton.setSelected(true);
-        nucleotideRadButton.setText("Nucleotide Sequence");
-        nucleotideRadButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                nucleotideRadButtonActionPerformed(evt);
-            }
-        });
-
-        proteinRadButton.setFont(new java.awt.Font("Ubuntu", 0, 17)); // NOI18N
-        proteinRadButton.setText("Protein Sequence");
-        proteinRadButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                proteinRadButtonActionPerformed(evt);
-            }
-        });
-
         jLabel1.setFont(new java.awt.Font("Ubuntu", 1, 17)); // NOI18N
         jLabel1.setText("Scoring Scheme");
 
@@ -111,7 +96,7 @@ public class UI extends javax.swing.JFrame {
             }
         });
 
-        jLabel2.setText("Match        :");
+        jLabel2.setText("Match       :");
 
         org.jdesktop.beansbinding.Binding binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, matchScore, org.jdesktop.beansbinding.ObjectProperty.create(), jLabel2, org.jdesktop.beansbinding.BeanProperty.create("labelFor"));
         bindingGroup.addBinding(binding);
@@ -121,78 +106,133 @@ public class UI extends javax.swing.JFrame {
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, mismatchScore, org.jdesktop.beansbinding.ObjectProperty.create(), jLabel3, org.jdesktop.beansbinding.BeanProperty.create("labelFor"));
         bindingGroup.addBinding(binding);
 
-        jLabel4.setText("Gap              :");
+        jLabel4.setText("Gap          :");
 
         binding = org.jdesktop.beansbinding.Bindings.createAutoBinding(org.jdesktop.beansbinding.AutoBinding.UpdateStrategy.READ_WRITE, gapScore, org.jdesktop.beansbinding.ObjectProperty.create(), jLabel4, org.jdesktop.beansbinding.BeanProperty.create("labelFor"));
         bindingGroup.addBinding(binding);
+
+        javax.swing.GroupLayout nuclPanelLayout = new javax.swing.GroupLayout(nuclPanel);
+        nuclPanel.setLayout(nuclPanelLayout);
+        nuclPanelLayout.setHorizontalGroup(
+            nuclPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(nuclPanelLayout.createSequentialGroup()
+                .addGap(43, 43, 43)
+                .addGroup(nuclPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(nuclPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(28, 28, 28))
+                    .addGroup(nuclPanelLayout.createSequentialGroup()
+                        .addGroup(nuclPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 76, Short.MAX_VALUE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(nuclPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(mismatchScore, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, nuclPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(gapScore, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(matchScore, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(106, Short.MAX_VALUE))
+        );
+        nuclPanelLayout.setVerticalGroup(
+            nuclPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(nuclPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(nuclPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(matchScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(nuclPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(gapScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(nuclPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(mismatchScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel4)))
+        );
 
         jLabel5.setFont(new java.awt.Font("Ubuntu", 1, 17)); // NOI18N
         jLabel5.setText("Scoring Matrix");
 
         scoringMatrixCBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PAM120 (Global)", "BIOSUM62 (Local)" }));
 
+        javax.swing.GroupLayout proteinPanelLayout = new javax.swing.GroupLayout(proteinPanel);
+        proteinPanel.setLayout(proteinPanelLayout);
+        proteinPanelLayout.setHorizontalGroup(
+            proteinPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(proteinPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(proteinPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(proteinPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, proteinPanelLayout.createSequentialGroup()
+                        .addGap(17, 17, 17)
+                        .addComponent(scoringMatrixCBox, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(35, Short.MAX_VALUE))
+        );
+        proteinPanelLayout.setVerticalGroup(
+            proteinPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(proteinPanelLayout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(scoringMatrixCBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(74, Short.MAX_VALUE))
+        );
+
+        proteinRadButton.setFont(new java.awt.Font("Ubuntu", 0, 17)); // NOI18N
+        proteinRadButton.setText("Protein Sequence");
+        proteinRadButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                proteinRadButtonActionPerformed(evt);
+            }
+        });
+
+        nucleotideRadButton.setFont(new java.awt.Font("Ubuntu", 0, 17)); // NOI18N
+        nucleotideRadButton.setSelected(true);
+        nucleotideRadButton.setText("Nucleotide Sequence");
+        nucleotideRadButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nucleotideRadButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout inputOptionsPanelLayout = new javax.swing.GroupLayout(inputOptionsPanel);
         inputOptionsPanel.setLayout(inputOptionsPanelLayout);
         inputOptionsPanelLayout.setHorizontalGroup(
             inputOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, inputOptionsPanelLayout.createSequentialGroup()
-                .addContainerGap(75, Short.MAX_VALUE)
+                .addContainerGap(29, Short.MAX_VALUE)
+                .addComponent(nuclPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(proteinPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(37, 37, 37))
+            .addGroup(inputOptionsPanelLayout.createSequentialGroup()
+                .addGap(81, 81, 81)
                 .addComponent(nucleotideRadButton)
-                .addGap(96, 96, 96)
+                .addGap(95, 95, 95)
                 .addComponent(proteinRadButton)
-                .addGap(108, 108, 108))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, inputOptionsPanelLayout.createSequentialGroup()
-                .addGroup(inputOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(inputOptionsPanelLayout.createSequentialGroup()
-                        .addGap(57, 57, 57)
-                        .addGroup(inputOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel4))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(inputOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(inputOptionsPanelLayout.createSequentialGroup()
-                                .addGroup(inputOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(gapScore, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(mismatchScore, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 394, Short.MAX_VALUE))
-                            .addGroup(inputOptionsPanelLayout.createSequentialGroup()
-                                .addComponent(matchScore, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(scoringMatrixCBox, javax.swing.GroupLayout.PREFERRED_SIZE, 201, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(inputOptionsPanelLayout.createSequentialGroup()
-                        .addGap(31, 31, 31)
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel5)
-                        .addGap(122, 122, 122)))
-                .addGap(50, 50, 50))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         inputOptionsPanelLayout.setVerticalGroup(
             inputOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(inputOptionsPanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(10, 10, 10)
                 .addGroup(inputOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nucleotideRadButton)
                     .addComponent(proteinRadButton))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(inputOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel5))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(inputOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(matchScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2)
-                    .addComponent(scoringMatrixCBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(inputOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(gapScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(inputOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(mismatchScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
-                .addContainerGap())
+                .addGroup(inputOptionsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(inputOptionsPanelLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(proteinPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(22, 22, 22))
+                    .addGroup(inputOptionsPanelLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(nuclPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -214,7 +254,7 @@ public class UI extends javax.swing.JFrame {
                 .addComponent(resetButton, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(97, 97, 97)
                 .addComponent(uploadFileButton, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 98, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(submitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(38, 38, 38))
             .addGroup(layout.createSequentialGroup()
@@ -235,8 +275,8 @@ public class UI extends javax.swing.JFrame {
                     .addComponent(uploadFileButton)
                     .addComponent(submitButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(inputOptionsPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(21, 21, 21))
+                .addComponent(inputOptionsPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(8, Short.MAX_VALUE))
         );
 
         bindingGroup.bind();
@@ -251,6 +291,7 @@ public class UI extends javax.swing.JFrame {
     }//GEN-LAST:event_submitButtonActionPerformed
 
     private void nucleotideRadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nucleotideRadButtonActionPerformed
+
         this.proteinRadButton.setSelected(false);
     }//GEN-LAST:event_nucleotideRadButtonActionPerformed
 
@@ -324,7 +365,9 @@ public class UI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField matchScore;
     private javax.swing.JTextField mismatchScore;
+    private javax.swing.JPanel nuclPanel;
     private javax.swing.JRadioButton nucleotideRadButton;
+    private javax.swing.JPanel proteinPanel;
     private javax.swing.JRadioButton proteinRadButton;
     private javax.swing.JButton resetButton;
     private javax.swing.JComboBox<String> scoringMatrixCBox;
