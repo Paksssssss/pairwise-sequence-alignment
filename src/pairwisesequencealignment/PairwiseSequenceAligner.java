@@ -100,16 +100,13 @@ public class PairwiseSequenceAligner {
         } else {
             int max, i = 1, j = 1;
             max = matrix[0][0].value;
-            boolean found = false;
             for (; j < seq2.sequence.length(); j++) {
-                for (; i < seq1.sequence.length(); i++) {
-                    System.out.println(max);
+                for (i = 1; i < seq1.sequence.length(); i++) {
                     if (matrix[i][j].value > max) {
                         max = matrix[i][j].value;
                     }
                 }
             }
-            traceback("",i,j);
         }
         alignments = new ArrayList<String>(new LinkedHashSet<String>(alignments));
     }
