@@ -27,7 +27,7 @@ public class PairwiseSequenceAlignment {
         psa.seq1 = seq1;
         psa.seq2 = seq2;
         psa.isProtein = true;
-        psa.global = false;
+        psa.global = true;
         psa.setScoringMatrix();
         psa.initializeMatrix();
         psa.fillMatrix();

@@ -115,14 +115,13 @@ public class PairwiseSequenceAligner {
                 }
             }
         }
+        System.out.println(alignments.size());
         alignments = new ArrayList<String>(new LinkedHashSet<String>(alignments));
     }
 
     public String traceback(String alignment, int i, int j) {
-        System.out.println(i+" "+j+ " "+ alignment);
-        if (i == 0 || j == 0) {
-            alignments.add(alignment);
-        }
+        System.out.println(alignment + "");
+        
         if (matrix[i][j].diag) {
             if (matrix[i][j].mismatch) {
                 alignment = "*" + alignment;
@@ -139,7 +138,14 @@ public class PairwiseSequenceAligner {
             alignment = "^" + alignment;
             traceback(alignment, i, --j);
         }
-        return null;
+        if (global && (i == 0 || j == 0)) {
+            alignments.add(alignment);
+            return alignment;
+        } else if (!global && (i == 1 || j ==1)) {
+            alignments.add(alignment);
+            return alignment;
+        }
+        return alignment;
     }
 
     private int getMax(int diag, int top, int left) {  
@@ -177,7 +183,7 @@ public class PairwiseSequenceAligner {
     public void printMatrix() {
         for (int j = 0; j < seq2.sequence.length(); j++) {
             for (int i = 0; i < seq1.sequence.length(); i++) {
-                System.out.print(matrix[i][j].value + " ");
+                System.out.print(matrix[i][j].value + "\t");
             }
             System.out.println("");
         }
