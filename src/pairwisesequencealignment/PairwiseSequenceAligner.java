@@ -32,11 +32,11 @@ public class PairwiseSequenceAligner {
 
     }
 
-    public void setScoringMatrix(int i) throws IOException {
-        if (i == 0) {
+    public void setScoringMatrix() throws IOException {
+        if (global) {
             scoringMatrix = new ScoringMatrix("./pam120.txt");
         } else {
-            scoringMatrix = new ScoringMatrix("./blosum62");
+            scoringMatrix = new ScoringMatrix("./blosum62.txt");
         }
         gapScore = scoringMatrix.getScore('*', 'A');
     }
@@ -79,7 +79,7 @@ public class PairwiseSequenceAligner {
                     top = gapScore + matrix[i][j - 1].value;
                 }
                 int choice = getMax(diag, top, left);
-                //System.out.print(choice+" ");
+                System.out.print(choice+" ");
                 if (!global && diag < 0 && top < 0 && left < 0) {
                     matrix[i][j] = new Cell(0, false, false, false, mismatch);
                 } else {
@@ -91,7 +91,7 @@ public class PairwiseSequenceAligner {
             }
             System.out.println("");
         }
-        System.out.println(score);
+        System.out.println(score + " im score");
     }
     
     public void solve(){
@@ -107,12 +107,20 @@ public class PairwiseSequenceAligner {
                     }
                 }
             }
+            for (j=1; j < seq2.sequence.length(); j++) {
+                for (i = 1; i < seq1.sequence.length(); i++) {
+                    if (matrix[i][j].value == max) {
+                        traceback("",i,j);
+                    }
+                }
+            }
         }
         alignments = new ArrayList<String>(new LinkedHashSet<String>(alignments));
     }
 
     public String traceback(String alignment, int i, int j) {
-        if (i == 0 && j == 0) {
+        System.out.println(i+" "+j+ " "+ alignment);
+        if (i == 0 || j == 0) {
             alignments.add(alignment);
         }
         if (matrix[i][j].diag) {
@@ -134,8 +142,7 @@ public class PairwiseSequenceAligner {
         return null;
     }
 
-    private int getMax(int diag, int top, int left) {
-        System.out.println(diag + " " + top + " " + left);
+    private int getMax(int diag, int top, int left) {  
         if (diag >= top && diag >= left) {
             return diag;
         } else if (top >= diag && top >= left) {

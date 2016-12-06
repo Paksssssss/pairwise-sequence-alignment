@@ -3,10 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/paks/NetBeansProjects/PairwiseSequenceAlignment/src/pairwisesequencealignment/Nucleotide.java</file>
-            <file>file:/home/paks/NetBeansProjects/PairwiseSequenceAlignment/src/pairwisesequencealignment/FunctionsandObjects.java</file>
-            <file>file:/home/paks/NetBeansProjects/PairwiseSequenceAlignment/src/pairwisesequencealignment/Protein.java</file>
-            <file>file:/home/paks/NetBeansProjects/PairwiseSequenceAlignment/src/pairwisesequencealignment/UI.java</file>
+            <file>file:/Users/rl-11/Documents/pairwise-sequence-alignment/src/pairwisesequencealignment/PairwiseSequenceAligner.java</file>
+            <file>file:/Users/rl-11/Documents/pairwise-sequence-alignment/src/pairwisesequencealignment/UI.java</file>
+            <file>file:/Users/rl-11/Documents/pairwise-sequence-alignment/src/pairwisesequencealignment/ScoringMatrix.java</file>
+            <file>file:/Users/rl-11/Documents/pairwise-sequence-alignment/src/pairwisesequencealignment/PairwiseSequenceAlignment.java</file>
         </group>
     </open-files>
 </project-private>
