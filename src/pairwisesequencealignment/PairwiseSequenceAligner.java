@@ -7,6 +7,7 @@ package pairwisesequencealignment;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 
 /**
@@ -20,11 +21,17 @@ public class PairwiseSequenceAligner {
     boolean isProtein;
     int matchScore, mismatchScore, gapScore;
     Sequence seq1, seq2;
-    ArrayList<String> alignments = new ArrayList();
+    ArrayList<String> alignments;
     ScoringMatrix scoringMatrix;
 
     public PairwiseSequenceAligner(boolean isGlobal) {
         this.global = isGlobal;
+    }
+
+    PairwiseSequenceAligner() {
+        alignments = new ArrayList();
+        seq1 = new Sequence();
+        seq2 = new Sequence();
     }
 
     public void parseInput(ArrayList<String> userInput) {
@@ -238,6 +245,25 @@ public class PairwiseSequenceAligner {
             }
             System.out.println("");
         }
+    }
+    
+    public HashMap countOccurence(String sequence){
+        HashMap tempMap = new HashMap();
+        String a;
+        char let;
+        int occ;
+        if (isProtein) {
+            a = "ARNDCQEGHILKMFPSTWYVBZX";
+        } else {
+            a = "ACTG";
+        }
+        
+        for (int i = 0; i < a.length(); i++) {
+            let = a.charAt(i);
+            occ = a.replaceAll("[^"+let+"]", sequence).length();
+            tempMap.put(let, occ);
+        }
+        return tempMap;
     }
 }
 

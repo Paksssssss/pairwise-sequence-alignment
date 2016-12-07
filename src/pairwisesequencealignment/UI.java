@@ -5,8 +5,11 @@
  */
 package pairwisesequencealignment;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 /**
@@ -305,6 +308,11 @@ public class UI extends javax.swing.JFrame {
                 } else {
                     psa.global = false;
                 }
+                try {
+                    psa.setScoringMatrix();
+                } catch (IOException ex) {
+                    Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
+                }
             } else if(nucleotideRadButton.isSelected()){
                 psa.isProtein = false; 
                 psa.global = glocalButton.isSelected();
@@ -316,8 +324,11 @@ public class UI extends javax.swing.JFrame {
                     JOptionPane.showMessageDialog(this, "Invalid Scoring Scheme!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
             }
-            psa.parseInput((ArrayList<String>) Arrays.asList(userInput.getText().split("\n")));
+            ArrayList<String> parseThisInput = new ArrayList(Arrays.asList(this.userInput.getText().split("\n")));
+            psa.parseInput(parseThisInput);
             if (psa.checkInput()) {
+                psa.initializeMatrix();
+                psa.fillMatrix();
                 psa.solve();
             } else {
                 JOptionPane.showMessageDialog(this, "Invalid Input!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -360,6 +371,10 @@ public class UI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_glocalButtonActionPerformed
 
+    public void showResults(){
+        
+    }
+    
     /**
      * @param args the command line arguments
      */
@@ -395,7 +410,7 @@ public class UI extends javax.swing.JFrame {
         });
     }
     
-    public PairwiseSequenceAligner psa;
+    public PairwiseSequenceAligner psa = new PairwiseSequenceAligner();
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField gapScore;
     private javax.swing.JToggleButton glocalButton;
