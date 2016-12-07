@@ -18,7 +18,6 @@ public class PairwiseSequenceAligner {
     Cell matrix[][];
     boolean global;
     boolean isProtein;
-    boolean isBlosum62, isPam120;
     int matchScore, mismatchScore, gapScore;
     Sequence seq1, seq2;
     ArrayList<String> alignments = new ArrayList();
@@ -28,8 +27,60 @@ public class PairwiseSequenceAligner {
         this.global = isGlobal;
     }
 
-    public void parseInput() {
-
+    public void parseInput(ArrayList<String> userInput) {
+        ArrayList<Sequence> sequenceSet = new ArrayList();
+        Sequence newSequence = new Sequence();
+        for (String s : userInput) {
+            if (s.startsWith(">")) {
+                if (!newSequence.name.isEmpty()&&!newSequence.sequence.isEmpty()) {
+                    sequenceSet.add(newSequence);
+                    newSequence = new Sequence();
+                }
+                newSequence.name = s.substring(1);
+            } else if(s.isEmpty()){
+                if (!newSequence.name.isEmpty()&&!newSequence.sequence.isEmpty()) {
+                    sequenceSet.add(newSequence);
+                    newSequence = new Sequence();
+                }
+                newSequence.name = s;
+            }  else if (s.equals(userInput.get(userInput.size()-1))) {
+                s=s.toUpperCase();
+                newSequence.sequence += s;
+                sequenceSet.add(newSequence);
+            } else {
+                s=s.toUpperCase();
+                newSequence.sequence += s;
+            }
+        }
+        if (sequenceSet.size()>2) {
+            System.out.println("Invalid Input");
+        } else {
+            seq1 = sequenceSet.get(0);
+            seq2 = sequenceSet.get(1);
+        }
+    }
+    
+    public boolean checkInput(){
+        if (seq1.sequence.isEmpty()||seq2.sequence.isEmpty()){
+            return false;
+        }
+        if (isProtein) {
+            if (seq1.sequence.contains("B")||seq1.sequence.contains("U")
+                    ||seq1.sequence.contains("O")||seq1.sequence.contains("Z")
+                            ||seq1.sequence.contains("X")||seq1.sequence.contains("J")) {
+                return false;
+            }
+            if (seq2.sequence.contains("B")||seq2.sequence.contains("U")
+                    ||seq2.sequence.contains("O")||seq2.sequence.contains("Z")
+                            ||seq2.sequence.contains("X")||seq2.sequence.contains("J")) {
+                return false;
+            }
+        } else {
+            if (seq1.sequence.matches("[^ACTG]")||seq2.sequence.matches("[^ACTG]")) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public void setScoringMatrix() throws IOException {
@@ -93,7 +144,7 @@ public class PairwiseSequenceAligner {
         }
         System.out.println(score + " im score");
     }
-    
+
     public void solve(){
         if (global) {
             traceback("",seq1.sequence.length()-1,seq2.sequence.length()-1);
@@ -121,7 +172,7 @@ public class PairwiseSequenceAligner {
 
     public String traceback(String alignment, int i, int j) {
         System.out.println(alignment + "");
-        
+
         if (matrix[i][j].diag) {
             if (matrix[i][j].mismatch) {
                 alignment = "*" + alignment;
@@ -148,7 +199,7 @@ public class PairwiseSequenceAligner {
         return alignment;
     }
 
-    private int getMax(int diag, int top, int left) {  
+    private int getMax(int diag, int top, int left) {
         if (diag >= top && diag >= left) {
             return diag;
         } else if (top >= diag && top >= left) {
@@ -223,12 +274,12 @@ class Cell {
     public Cell(int value) {
         this.value = value;
     }
-    
+
     public Cell(int value, boolean mismatch){
         this.value = value;
         this.mismatch = mismatch;
     }
-    
+
     public Cell(int value, boolean left, boolean up, boolean diag, boolean mismatch) {
         this.value = value;
         this.left = left;
