@@ -498,8 +498,8 @@ public class UI extends javax.swing.JFrame {
         output += "Run date:"+ date.toString()    +"\n\n Submitted Sequences:\n";
         output += ">"+psa.seq1.name +"\n"+ psa.seq1.sequence +"\n\n";
         output += ">"+psa.seq2.name +"\n"+ psa.seq2.sequence +"\n\n";
-        output += ">"+psa.seq1.name + " length: "+ psa.seq1.sequence.length()-1+"\n";
-        output += ">"+psa.seq2.name + " length: "+ psa.seq2.sequence.length()-1+"\n";
+        output += ">"+psa.seq1.name + " length: "+ (psa.seq1.sequence.length()-1)+"\n";
+        output += ">"+psa.seq2.name + " length: "+ (psa.seq2.sequence.length()-1)+"\n";
         output += "Frequence Occurence:\nSQ:\tS1\ts2\tTotal\n";
         for (int i = 0; i < a.length(); i++) {
             let = a.charAt(i);
