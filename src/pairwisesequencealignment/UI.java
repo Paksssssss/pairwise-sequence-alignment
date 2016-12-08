@@ -5,10 +5,15 @@
  */
 package pairwisesequencealignment;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -493,8 +498,8 @@ public class UI extends javax.swing.JFrame {
         output += "Run date:"+ date.toString()    +"\n\n Submitted Sequences:\n";
         output += ">"+psa.seq1.name +"\n"+ psa.seq1.sequence +"\n\n";
         output += ">"+psa.seq2.name +"\n"+ psa.seq2.sequence +"\n\n";
-        output += ">"+psa.seq1.name + " length: "+ psa.seq1.sequence.length()+"\n";
-        output += ">"+psa.seq2.name + " length: "+ psa.seq2.sequence.length()+"\n";
+        output += ">"+psa.seq1.name + " length: "+ psa.seq1.sequence.length()-1+"\n";
+        output += ">"+psa.seq2.name + " length: "+ psa.seq2.sequence.length()-1+"\n";
         output += "Frequence Occurence:\nSQ:\tS1\ts2\tTotal\n";
         for (int i = 0; i < a.length(); i++) {
             let = a.charAt(i);
@@ -505,7 +510,12 @@ public class UI extends javax.swing.JFrame {
         output += printAlignment();
         output += "Score: "+ psa.alignmentScore;
     
-        
+        this.saveOutput.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                writeToFile();
+            }
+        });
         this.outputTextArea.setText(output);
         
         this.outputFrame.pack();
@@ -547,6 +557,26 @@ public class UI extends javax.swing.JFrame {
             finString +=seq1+"\n"+alignment+"\n"+seq2+"\n\n";
         }
         return finString;
+    }
+    
+    public void writeToFile(){
+        JFileChooser saveFile = new JFileChooser();
+        saveFile.setMultiSelectionEnabled(false);
+        saveFile.setDialogTitle("Export Report");
+        // Demonstrate "Save" dialog:
+        int returnVal = saveFile.showSaveDialog(null);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            try {
+                String dir = saveFile.getSelectedFile().getCanonicalPath();
+                //Path out = Paths.get(dir);
+                FileWriter fw = new FileWriter(dir);
+                this.outputTextArea.write(fw);
+            } catch (IOException ex) {
+                System.out.println("NO SUCH PATH");
+            }
+        } else {
+            System.out.println("File access cancelled by user.");
+        }
     }
 
     static class CustomFileFilter extends javax.swing.filechooser.FileFilter {
