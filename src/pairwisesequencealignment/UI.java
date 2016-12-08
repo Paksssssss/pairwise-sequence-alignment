@@ -5,12 +5,19 @@
  */
 package pairwisesequencealignment;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 
 /**
  *
@@ -35,6 +42,12 @@ public class UI extends javax.swing.JFrame {
     private void initComponents() {
         bindingGroup = new org.jdesktop.beansbinding.BindingGroup();
 
+        uploadFileChooser = new javax.swing.JFileChooser();
+        outputFrame = new javax.swing.JFrame();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        outputTextArea = new javax.swing.JTextArea();
+        saveOutput = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         userInput = new javax.swing.JTextArea();
         inputLabel = new javax.swing.JLabel();
@@ -57,6 +70,44 @@ public class UI extends javax.swing.JFrame {
         scoringMatrixCBox = new javax.swing.JComboBox<>();
         proteinRadButton = new javax.swing.JRadioButton();
 
+        outputTextArea.setEditable(false);
+        outputTextArea.setColumns(20);
+        outputTextArea.setFont(new java.awt.Font("Monospaced", 0, 13)); // NOI18N
+        outputTextArea.setRows(5);
+        jScrollPane2.setViewportView(outputTextArea);
+
+        saveOutput.setText("Save");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(151, 151, 151)
+                .addComponent(saveOutput, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(153, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 419, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(saveOutput, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        javax.swing.GroupLayout outputFrameLayout = new javax.swing.GroupLayout(outputFrame.getContentPane());
+        outputFrame.getContentPane().setLayout(outputFrameLayout);
+        outputFrameLayout.setHorizontalGroup(
+            outputFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        outputFrameLayout.setVerticalGroup(
+            outputFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Pairwise Sequence Alignment");
 
@@ -75,6 +126,11 @@ public class UI extends javax.swing.JFrame {
         });
 
         uploadFileButton.setText("Upload File");
+        uploadFileButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                uploadFileButtonActionPerformed(evt);
+            }
+        });
 
         submitButton.setText("Submit");
         submitButton.addActionListener(new java.awt.event.ActionListener() {
@@ -88,14 +144,14 @@ public class UI extends javax.swing.JFrame {
 
         matchScore.setText("1");
 
-        mismatchScore.setText("-1");
+        mismatchScore.setText("0");
         mismatchScore.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 mismatchScoreActionPerformed(evt);
             }
         });
 
-        gapScore.setText("0");
+        gapScore.setText("-1");
         gapScore.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 gapScoreActionPerformed(evt);
@@ -152,10 +208,9 @@ public class UI extends javax.swing.JFrame {
                                 .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                             .addGroup(nuclPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(mismatchScore, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, nuclPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(gapScore, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(matchScore, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(gapScore, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(matchScore, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(mismatchScore, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(nuclPanelLayout.createSequentialGroup()
                         .addGap(44, 44, 44)
                         .addComponent(glocalButton, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -173,12 +228,12 @@ public class UI extends javax.swing.JFrame {
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(nuclPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(gapScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel3))
+                    .addComponent(jLabel3)
+                    .addComponent(mismatchScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(nuclPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(mismatchScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4))
+                    .addComponent(jLabel4)
+                    .addComponent(gapScore, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(glocalButton)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -188,6 +243,7 @@ public class UI extends javax.swing.JFrame {
         jLabel5.setText("Scoring Matrix");
 
         scoringMatrixCBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "PAM120 (Global)", "BIOSUM62 (Local)" }));
+        scoringMatrixCBox.setEnabled(false);
 
         proteinRadButton.setFont(new java.awt.Font("Ubuntu", 0, 17)); // NOI18N
         proteinRadButton.setText("Protein Sequence");
@@ -301,44 +357,62 @@ public class UI extends javax.swing.JFrame {
         if (!this.proteinRadButton.isSelected() && !this.nucleotideRadButton.isSelected()) {
             JOptionPane.showMessageDialog(this, "Please choose which kind of sequence!", "Error", JOptionPane.ERROR_MESSAGE);
         } else {
-            if (proteinRadButton.isSelected()) {
-                psa.isProtein = true;
-                if (scoringMatrixCBox.getSelectedIndex() == 0) {
-                    psa.global = true;
-                } else {
-                    psa.global = false;
-                }
-                try {
-                    psa.setScoringMatrix();
-                } catch (IOException ex) {
-                    Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            } else if(nucleotideRadButton.isSelected()){
-                psa.isProtein = false; 
-                psa.global = glocalButton.isSelected();
-                ArrayList<String> scoreScheme = new ArrayList();
-                scoreScheme.add(matchScore.getText());
-                scoreScheme.add(mismatchScore.getText());
-                scoreScheme.add(gapScore.getText());
-                if (!psa.scoringSchemeChecker(scoreScheme)) {
-                    JOptionPane.showMessageDialog(this, "Invalid Scoring Scheme!", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-            ArrayList<String> parseThisInput = new ArrayList(Arrays.asList(this.userInput.getText().split("\n")));
-            psa.parseInput(parseThisInput);
-            if (psa.checkInput()) {
-                psa.initializeMatrix();
-                psa.fillMatrix();
-                psa.solve();
+            if (!this.userInput.getText().startsWith(">")) {
+                JOptionPane.showMessageDialog(this, "Input not in FASTA Format", "Input Error", JOptionPane.ERROR_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(this, "Invalid Input!", "Error", JOptionPane.ERROR_MESSAGE);
+                if (proteinRadButton.isSelected()) {
+                    psa.isProtein = true;
+                    if (scoringMatrixCBox.getSelectedIndex() == 0) {
+                        psa.global = true;
+                    } else {
+                        psa.global = false;
+                    }
+                    try {
+                        psa.setScoringMatrix();
+                    } catch (IOException ex) {
+                        Logger.getLogger(UI.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } else if (nucleotideRadButton.isSelected()) {
+                    psa.isProtein = false;
+                    psa.global = glocalButton.isSelected();
+                    System.out.println();
+                    ArrayList<String> scoreScheme = new ArrayList();
+                    scoreScheme.add(matchScore.getText());
+                    scoreScheme.add(mismatchScore.getText());
+                    scoreScheme.add(gapScore.getText());
+                    if (!psa.scoringSchemeChecker(scoreScheme)) {
+                        JOptionPane.showMessageDialog(this, "Invalid Scoring Scheme!", "Error", JOptionPane.ERROR_MESSAGE);
+                    } else {
+                        psa.matchScore = Integer.parseInt(this.matchScore.getText());
+                        psa.mismatchScore = Integer.parseInt(this.mismatchScore.getText());
+                        psa.gapScore = Integer.parseInt(this.gapScore.getText());
+                    }
+                }
+                ArrayList<String> parseThisInput = new ArrayList(Arrays.asList(this.userInput.getText().split("\n")));
+                if (psa.parseInput(parseThisInput)) {
+                    if (psa.checkInput()) {
+                        psa.initializeMatrix();
+                        psa.fillMatrix();
+                        psa.solve();
+                        generateOutput();
+
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Invalid Input!", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Invalid Input!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
         }
     }//GEN-LAST:event_submitButtonActionPerformed
 
     private void nucleotideRadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nucleotideRadButtonActionPerformed
-
         this.proteinRadButton.setSelected(false);
+        this.glocalButton.setEnabled(true);
+        this.matchScore.setEnabled(true);
+        this.mismatchScore.setEnabled(true);
+        this.gapScore.setEnabled(true);
+        this.scoringMatrixCBox.setEnabled(false);
     }//GEN-LAST:event_nucleotideRadButtonActionPerformed
 
     private void mismatchScoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mismatchScoreActionPerformed
@@ -351,16 +425,26 @@ public class UI extends javax.swing.JFrame {
 
     private void proteinRadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proteinRadButtonActionPerformed
         this.nucleotideRadButton.setSelected(false);
+        this.glocalButton.setEnabled(false);
+        this.matchScore.setEnabled(false);
+        this.mismatchScore.setEnabled(false);
+        this.gapScore.setEnabled(false);
+        this.scoringMatrixCBox.setEnabled(true);
     }//GEN-LAST:event_proteinRadButtonActionPerformed
 
     private void resetButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_resetButtonActionPerformed
         this.userInput.setText("");
-        this.nucleotideRadButton.setSelected(false);
-        this.proteinRadButton.setSelected(true);
+        this.nucleotideRadButton.setSelected(true);
+        this.proteinRadButton.setSelected(false);
         this.matchScore.setText("1");
         this.mismatchScore.setText("0");
         this.gapScore.setText("-1");
         this.scoringMatrixCBox.setSelectedIndex(0);
+        this.glocalButton.setEnabled(true);
+        this.matchScore.setEnabled(true);
+        this.mismatchScore.setEnabled(true);
+        this.gapScore.setEnabled(true);
+        this.scoringMatrixCBox.setEnabled(false);
     }//GEN-LAST:event_resetButtonActionPerformed
 
     private void glocalButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_glocalButtonActionPerformed
@@ -371,10 +455,114 @@ public class UI extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_glocalButtonActionPerformed
 
-    public void showResults(){
+    private void uploadFileButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_uploadFileButtonActionPerformed
+        uploadFileChooser.setMultiSelectionEnabled(false);
+        uploadFileChooser.setFileFilter(new CustomFileFilter());
+        int returnVal = uploadFileChooser.showOpenDialog(this);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = uploadFileChooser.getSelectedFile();
+            try {
+                // What to do with the file, e.g. display it in a TextArea
+                this.userInput.read(new FileReader(file.getAbsolutePath()), null);
+            } catch (FileNotFoundException ex) {
+                System.out.println("problem accessing file" + file.getAbsolutePath());
+            } catch (IOException ex) {
+                System.out.println("problem accessing file" + file.getAbsolutePath());
+            }
+        } else {
+            System.out.println("File access cancelled by user.");
+        }
+    }//GEN-LAST:event_uploadFileButtonActionPerformed
+
+    public void showResults() {
+
+    }
+
+    public void generateOutput() {
+        outputTextArea.setText("");
+        Date date = new Date();
+        String a;
+        char let;
+        int occ1, occ2;
+        if (psa.isProtein) {
+            a = "ARNDCQEGHILKMFPSTWYVBZX";
+        } else {
+            a = "ACTG";
+        }
+        String output = "Pairwise Sequence Alignment ver. 1.0 by John Vincent N. Pakson (2013-54677)\n";
+        output += "Run date:"+ date.toString()    +"\n\n Submitted Sequences:\n";
+        output += ">"+psa.seq1.name +"\n"+ psa.seq1.sequence +"\n\n";
+        output += ">"+psa.seq2.name +"\n"+ psa.seq2.sequence +"\n\n";
+        output += ">"+psa.seq1.name + " length: "+ psa.seq1.sequence.length()+"\n";
+        output += ">"+psa.seq2.name + " length: "+ psa.seq2.sequence.length()+"\n";
+        output += "Frequence Occurence:\nSQ:\tS1\ts2\tTotal\n";
+        for (int i = 0; i < a.length(); i++) {
+            let = a.charAt(i);
+            occ1 = psa.seq1.sequence.replaceAll("[^"+let+"]", "").length();
+            occ2 = psa.seq2.sequence.replaceAll("[^"+let+"]", "").length();
+            output += let+":\t"+occ1+"\t"+occ2+"\t"+(occ1+occ2)+"\n";
+        }
+        output += printAlignment();
+        output += "Score: "+ psa.alignmentScore;
+    
         
+        this.outputTextArea.setText(output);
+        
+        this.outputFrame.pack();
+        this.outputFrame.setVisible(true);
     }
     
+    public String printAlignment(){
+        String seq1,seq2,alignment, finString = "";
+        int a = 1;
+        psa.seq1.sequence = psa.seq1.sequence.substring(1);
+        psa.seq2.sequence = psa.seq2.sequence.substring(1);
+        for (String al: psa.alignments) {
+            seq1 = seq2 = alignment = "";
+            finString += "\nAlignment " + a + " \n";
+            for (int i = 0,j =0, k=0; i < al.length(); i++) {
+                if (i%10==0 && i!=0) {
+                    seq1 += " ";
+                    alignment += " ";
+                    seq2 +=" ";
+                } else if (al.charAt(i) == '*' || al.charAt(i) == '.') {
+                    seq1 += psa.seq1.sequence.charAt(j);
+                    alignment += al.charAt(i);
+                    seq2 +=psa.seq2.sequence.charAt(k);
+                    j++;
+                    k++;
+                } else if (al.charAt(i) == '-') {
+                    seq2 += '-';
+                    alignment += " ";
+                    seq1 += psa.seq1.sequence.charAt(j);
+                    j++;
+                } else if (al.charAt(i) == '^'){
+                    seq1 += '-';
+                    alignment += " ";
+                    seq2 += psa.seq2.sequence.charAt(k);
+                    k++;
+                }
+            }
+            a++;
+            finString +=seq1+"\n"+alignment+"\n"+seq2+"\n\n";
+        }
+        return finString;
+    }
+
+    static class CustomFileFilter extends javax.swing.filechooser.FileFilter {
+
+        @Override
+        public boolean accept(File f) {
+            // Allow only directories, or files with ".txt" extension
+            return f.isDirectory() || f.getAbsolutePath().endsWith(".FASTA") || f.getAbsolutePath().endsWith(".fasta") || f.getAbsolutePath().endsWith(".txt");
+        }
+
+        @Override
+        public String getDescription() {
+            return "Fasta Files (*.FASTA) or Text Files (*.txt)";
+        }
+    }
+
     /**
      * @param args the command line arguments
      */
@@ -386,7 +574,7 @@ public class UI extends javax.swing.JFrame {
          */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+                if ("Windows".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
@@ -409,7 +597,9 @@ public class UI extends javax.swing.JFrame {
             }
         });
     }
-    
+
+    public HashMap occurences1;
+    public HashMap occurences2;
     public PairwiseSequenceAligner psa = new PairwiseSequenceAligner();
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField gapScore;
@@ -421,17 +611,23 @@ public class UI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField matchScore;
     private javax.swing.JTextField mismatchScore;
     private javax.swing.JPanel nuclPanel;
     private javax.swing.JRadioButton nucleotideRadButton;
+    private javax.swing.JFrame outputFrame;
+    private javax.swing.JTextArea outputTextArea;
     private javax.swing.JPanel proteinPanel;
     private javax.swing.JRadioButton proteinRadButton;
     private javax.swing.JButton resetButton;
+    private javax.swing.JButton saveOutput;
     private javax.swing.JComboBox<String> scoringMatrixCBox;
     private javax.swing.JButton submitButton;
     private javax.swing.JButton uploadFileButton;
+    private javax.swing.JFileChooser uploadFileChooser;
     private javax.swing.JTextArea userInput;
     private org.jdesktop.beansbinding.BindingGroup bindingGroup;
     // End of variables declaration//GEN-END:variables

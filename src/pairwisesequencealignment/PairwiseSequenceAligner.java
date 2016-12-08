@@ -23,6 +23,7 @@ public class PairwiseSequenceAligner {
     Sequence seq1, seq2;
     ArrayList<String> alignments;
     ScoringMatrix scoringMatrix;
+    int alignmentScore;
 
     public PairwiseSequenceAligner(boolean isGlobal) {
         this.global = isGlobal;
@@ -34,7 +35,7 @@ public class PairwiseSequenceAligner {
         seq2 = new Sequence();
     }
 
-    public void parseInput(ArrayList<String> userInput) {
+    public boolean parseInput(ArrayList<String> userInput) {
         ArrayList<Sequence> sequenceSet = new ArrayList();
         Sequence newSequence = new Sequence();
         for (String s : userInput) {
@@ -59,11 +60,14 @@ public class PairwiseSequenceAligner {
                 newSequence.sequence += s;
             }
         }
-        if (sequenceSet.size()>2) {
-            System.out.println("Invalid Input");
+        if (sequenceSet.size()>2 || sequenceSet.size() == 0) {
+            return false;
         } else {
             seq1 = sequenceSet.get(0);
             seq2 = sequenceSet.get(1);
+            seq1.sequence = seq1.sequence.toUpperCase();
+            seq2.sequence = seq2.sequence.toUpperCase();
+            return true;
         }
     }
     
@@ -83,8 +87,14 @@ public class PairwiseSequenceAligner {
                 return false;
             }
         } else {
-            if (seq1.sequence.matches("[^ACTG]")||seq2.sequence.matches("[^ACTG]")) {
-                return false;
+            for (int i = 0; i < seq1.sequence.length(); i++) {
+                if (seq1.sequence.charAt(i)!='A'&&seq1.sequence.charAt(i)!='T'&&seq1.sequence.charAt(i)!='C'&&seq1.sequence.charAt(i)!='G') {
+                    return false;
+                }
+            } for (int i = 0; i < seq2.sequence.length(); i++) {
+                if (seq2.sequence.charAt(i)!='A'&&seq2.sequence.charAt(i)!='T'&&seq2.sequence.charAt(i)!='C'&&seq2.sequence.charAt(i)!='G') {
+                    return false;
+                }
             }
         }
         return true;
@@ -138,7 +148,7 @@ public class PairwiseSequenceAligner {
                 }
                 int choice = getMax(diag, top, left);
                 System.out.print(choice+" ");
-                if (!global && diag < 0 && top < 0 && left < 0) {
+                if (!global && diag <= 0 && top <= 0 && left <= 0) {
                     matrix[i][j] = new Cell(0, false, false, false, mismatch);
                 } else {
                     matrix[i][j] = new Cell(choice, mismatch);
@@ -149,14 +159,14 @@ public class PairwiseSequenceAligner {
             }
             System.out.println("");
         }
-        System.out.println(score + " im score");
     }
 
     public void solve(){
         if (global) {
             traceback("",seq1.sequence.length()-1,seq2.sequence.length()-1);
+            alignmentScore = matrix[seq1.sequence.length()-1][seq2.sequence.length()-1].value;
         } else {
-            int max, i = 1, j = 1;
+            int max, i = 1, j = 1; 
             max = matrix[0][0].value;
             for (; j < seq2.sequence.length(); j++) {
                 for (i = 1; i < seq1.sequence.length(); i++) {
@@ -165,6 +175,7 @@ public class PairwiseSequenceAligner {
                     }
                 }
             }
+            System.out.println(max);
             for (j=1; j < seq2.sequence.length(); j++) {
                 for (i = 1; i < seq1.sequence.length(); i++) {
                     if (matrix[i][j].value == max) {
@@ -172,6 +183,7 @@ public class PairwiseSequenceAligner {
                     }
                 }
             }
+            alignmentScore = max;
         }
         System.out.println(alignments.size());
         alignments = new ArrayList<String>(new LinkedHashSet<String>(alignments));
@@ -182,9 +194,9 @@ public class PairwiseSequenceAligner {
 
         if (matrix[i][j].diag) {
             if (matrix[i][j].mismatch) {
-                alignment = "*" + alignment;
+                alignment = "." + alignment;
             } else {
-                alignment = "|" + alignment;
+                alignment = "*" + alignment;
             }
             traceback(alignment, --i, --j);
         }
@@ -261,7 +273,6 @@ public class PairwiseSequenceAligner {
         for (int i = 0; i < a.length(); i++) {
             let = a.charAt(i);
             occ = a.replaceAll("[^"+let+"]", sequence).length();
-            tempMap.put(let, occ);
         }
         return tempMap;
     }
